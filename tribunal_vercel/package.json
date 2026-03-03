@@ -1,0 +1,6 @@
+{
+  "name": "tfm-tribunal",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.0"
+  }
+}
