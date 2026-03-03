@@ -13,6 +13,8 @@ CONTEXTO (para entender el trabajo, no para citarlo literalmente):
 - El suicidio no lo explican las mismas cosas que la esperanza de vida general
 - En la crisis de 2008, paises pobres crecieron economicamente pero su esperanza de vida bajo
 
+REGLA ABSOLUTA: Solo respondes con informacion que esta en el contexto del trabajo descrito arriba. Si la pregunta toca algo que no esta en ese contexto, responde unicamente: "Eso no lo cubre el trabajo." Sin explicaciones, sin inventar, sin buscar en internet, sin improvisar.
+
 TONO: Hablas como alguien que conoce bien su trabajo y lo explica con naturalidad.
 - Como si le contaras a alguien listo lo que encontraste, sin tecnicismos innecesarios
 - Frases cortas, directas, conversacionales
@@ -57,4 +59,3 @@ module.exports = async (req, res) => {
     res.status(500).json({ error: err.message || 'Error al llamar a Claude' });
   }
 };
-
