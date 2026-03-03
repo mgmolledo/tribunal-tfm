@@ -69,9 +69,9 @@ header{border-bottom:1px solid var(--border);padding:16px 28px;display:flex;alig
       <button class="mic-btn" id="mic-btn" onclick="toggleMic()">&#127908;</button>
       <span class="mic-lbl" id="mic-lbl">Pulsa para escuchar la pregunta</span>
     </div>
-    <div class="box">
-      <div class="lbl">Pregunta detectada</div>
-      <div class="transcript empty" id="transcript">Esperando transcripcion...</div>
+    <div class="box" style="display:flex;gap:8px;align-items:flex-start">
+      <textarea id="transcript" placeholder="Transcripcion editable — corrige si es necesario y pulsa Enviar" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendTranscript()}" style="flex:1;background:none;border:none;color:#e0d8c8;font-family:'IBM Plex Sans',sans-serif;font-size:.9rem;line-height:1.6;resize:none;outline:none;min-height:48px;font-style:italic"></textarea>
+      <button onclick="sendTranscript()" style="padding:8px 14px;background:#d4820a;color:#0a0a0a;border:none;font-family:monospace;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;font-weight:500;cursor:pointer;border-radius:2px;white-space:nowrap;align-self:flex-end">Enviar</button>
     </div>
     <div class="resp-box">
       <div class="resp-hdr"><span class="resp-lbl">Respuesta sugerida</span></div>
@@ -133,6 +133,21 @@ function setTab(t){
   document.getElementById('panel-practice').classList.toggle('active',t==='practice');
 }
 
+function sendTranscript(){
+  var q=document.getElementById('transcript').value.trim();
+  if(!q)return;
+  answerLive(q);
+}
+
+function sendManual(){
+  var el=document.getElementById('manual-input');
+  var q=el.value.trim();
+  if(!q)return;
+  setT(q,false);
+  el.value='';
+  answerLive(q);
+}
+
 function toggleMic(){ listening?stopMic():startMic(); }
 
 function startMic(){
@@ -161,7 +176,7 @@ function stopMic(){
 
 function setT(t,empty){
   var el=document.getElementById('transcript');
-  el.textContent=t;el.classList.toggle('empty',empty);
+  el.value=empty?'':t;
 }
 
 async function answerLive(q){
