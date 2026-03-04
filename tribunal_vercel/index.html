@@ -30,6 +30,9 @@ header{border-bottom:1px solid var(--border);padding:16px 28px;display:flex;alig
 .lbl{font-family:monospace;font-size:.62rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
 .transcript{font-size:.9rem;line-height:1.6;color:var(--text);font-style:italic;min-height:22px}
 .transcript.empty{color:var(--dim);font-style:normal}
+.q-input{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:.9rem;line-height:1.6;padding:12px 14px;resize:vertical;min-height:60px;border-radius:2px;font-style:italic}
+.q-input:focus{outline:none;border-color:var(--amber-dim)}
+.send-row{display:flex;justify-content:flex-end}
 .resp-box{border:1px solid var(--amber-dim);background:rgba(212,130,10,.04);border-radius:2px}
 .resp-hdr{padding:10px 18px;border-bottom:1px solid var(--amber-dim);background:rgba(212,130,10,.06)}
 .resp-lbl{font-family:monospace;font-size:.62rem;color:var(--amber);letter-spacing:.1em;text-transform:uppercase}
@@ -68,11 +71,13 @@ header{border-bottom:1px solid var(--border);padding:16px 28px;display:flex;alig
     <div class="mic-zone">
       <button class="mic-btn" id="mic-btn" onclick="toggleMic()">&#127908;</button>
       <span class="mic-lbl" id="mic-lbl">Pulsa para escuchar la pregunta</span>
-      <button class="gbtn" id="send-btn" onclick="sendTranscript()" style="display:none">Enviar pregunta</button>
     </div>
     <div class="box">
-      <div class="lbl">Pregunta detectada</div>
-      <div class="transcript empty" id="transcript">Esperando transcripcion...</div>
+      <div class="lbl">Pregunta detectada — edita si es necesario</div>
+      <textarea class="q-input" id="transcript" placeholder="Escribe o dicta la pregunta aquí..."></textarea>
+      <div class="send-row" style="margin-top:10px">
+        <button class="gbtn" id="send-btn" onclick="sendTranscript()">Enviar pregunta</button>
+      </div>
     </div>
     <div class="resp-box">
       <div class="resp-hdr"><span class="resp-lbl">Respuesta sugerida</span></div>
@@ -168,22 +173,16 @@ function stopMic(){
   document.getElementById('mic-btn').innerHTML='&#127908;';
   document.getElementById('mic-lbl').textContent='Pulsa para escuchar la pregunta';
   document.getElementById('mic-lbl').classList.remove('on');
-  // Muestra botón enviar solo si hay transcripción
-  var t=document.getElementById('transcript').textContent;
-  document.getElementById('send-btn').style.display=(t&&t.trim().length>3)?'block':'none';
 }
 
 function sendTranscript(){
-  var t=document.getElementById('transcript').textContent;
-  if(t&&t.trim().length>3){
-    document.getElementById('send-btn').style.display='none';
-    answerLive(t);
-  }
+  var t=document.getElementById('transcript').value.trim();
+  if(t.length>3)answerLive(t);
 }
 
 function setT(t,empty){
   var el=document.getElementById('transcript');
-  el.textContent=t;el.classList.toggle('empty',empty);
+  el.value=t;
 }
 
 async function answerLive(q){
@@ -232,4 +231,3 @@ buildTopics();
 </script>
 </body>
 </html>
-
