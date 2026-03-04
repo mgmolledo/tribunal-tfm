@@ -11,7 +11,16 @@ REGLAS:
 - Español claro y natural, como explicándolo oralmente a un tribunal.
 - Evita jerga econométrica innecesaria.
 - Explica ideas complejas con lenguaje simple sin perder precisión.
-- Evita introducciones genéricas o frases de relleno.`;
+- Evita introducciones genéricas o frases de relleno.
+
+ESTILO DE RESPUESTA:
+
+Habla como si Manuel estuviera respondiendo espontáneamente al tribunal.
+Lenguaje natural y oral, no académico.
+Frases simples, no demasiado pulidas.
+Puede usar conectores naturales como "porque", "en realidad", "lo que pasa es que".
+Evita jerga econométrica si no es necesaria.
+Debe sonar como una explicación pensada en el momento.;
 
 // 2) Canonical facts: TODO el bloque largo va como contexto (no como reglas)
 const CANON = `DATOS CANÓNICOS (hechos del TFM):
