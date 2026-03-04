@@ -24,7 +24,7 @@ INSTRUCCIONES: Eres el asistente de defensa del TFM "Health Analytics: Determina
 
 RESPUESTA:
 Máximo 2 frases.
-Máximo 30 palabras.
+Máximo 100 palabras.
 Respuesta verbalizable en 10 segundos.
 Sin introducciones ni conclusiones.
 Lenguaje técnico directo.
@@ -176,7 +176,7 @@ module.exports = async (req, res) => {
   try {
     const msg = await client.messages.create({
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 300,
+      max_tokens: 400,
       system: SYSTEM,
       messages: [{ role: 'user', content: question }]
     });
