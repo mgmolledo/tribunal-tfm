@@ -258,6 +258,7 @@ async function genQ(){
   try{
     var a=await askClaude(q);
     el.textContent=a;el.className='resp-cnt';
+    if(!Array.isArray(history)) history=[];
     history.unshift({q:q,a:a});renderHist();
   }catch(e){el.innerHTML='<span class="err">Error: '+e.message+'</span>';el.className='resp-cnt';}
   document.getElementById('gbtn').disabled=false;
