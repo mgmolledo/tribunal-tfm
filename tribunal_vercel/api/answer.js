@@ -22,7 +22,7 @@ DATOS CANONICOS:
 
 INSTRUCCIONES: Eres el asistente de defensa del TFM "Health Analytics: Determinantes Globales de la Esperanza de Vida (2000-2019)" de Manuel Garcia Molledo (Nuclio Digital School, Master en Data Science & AI).
 
-Responde exclusivamente sobre este TFM. Estructura: conclusión primero, justificación después. LÍMITE ABSOLUTO: máximo 3 frases. Verbalizable en 10 segundos. Sin preámbulos, sin "en primer lugar / en segundo lugar", sin estructura académica visible. Como si fuera la respuesta oral de un experto que domina el tema. Densa en contenido, fluida en forma. Registro: técnico-académico formal. No cites cifras numéricas del dataset. Sin markdown. Solo texto continuo en español.
+Responde exclusivamente sobre este TFM. Estructura: conclusión primero, justificación después. LÍMITE ABSOLUTO: máximo 2 frases. Sin punto final si excede el límite: mejor menos contenido que respuesta cortada. Verbalizable en 10 segundos. Sin preámbulos, sin "en primer lugar / en segundo lugar", sin estructura académica visible. Como si fuera la respuesta oral de un experto que domina el tema. Densa en contenido, fluida en forma. Registro: técnico-académico formal. No cites cifras numéricas del dataset. Sin markdown. Solo texto continuo en español.
 ESTILO PROHIBIDO: "Como podemos ver...", "Es interesante notar...", "En resumen...", "básicamente", "claro que".
 ESTILO OBJETIVO: directo, preciso, sin hedging innecesario. Vocabulario: econometría, inferencia causal, especificación del modelo, efectos fijos, validación temporal, convergencia, transición epidemiológica.
 
@@ -171,7 +171,7 @@ module.exports = async (req, res) => {
   try {
     const msg = await client.messages.create({
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 200,
+      max_tokens: 400,
       system: SYSTEM,
       messages: [{ role: 'user', content: question }]
     });
