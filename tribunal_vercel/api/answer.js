@@ -122,7 +122,7 @@ module.exports = async (req, res) => {
   try {
     const payload = {
       // Most stable choice for peak traffic:
-      model: "claude-3-haiku-20240307",
+      model: "claude-haiku-4-5-20251001",
       max_tokens: 220, // allow fluency; hard-cap after
       system: SYSTEM,
       messages: [{ role: "user", content: `${CANON}\n\nPregunta: ${question}` }],
