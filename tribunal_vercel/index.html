@@ -68,10 +68,11 @@ header{border-bottom:1px solid var(--border);padding:16px 28px;display:flex;alig
     <div class="mic-zone">
       <button class="mic-btn" id="mic-btn" onclick="toggleMic()">&#127908;</button>
       <span class="mic-lbl" id="mic-lbl">Pulsa para escuchar la pregunta</span>
+      <button class="gbtn" id="send-btn" onclick="sendTranscript()" style="display:none">Enviar pregunta</button>
     </div>
-    <div class="box" style="display:flex;gap:8px;align-items:flex-start">
-      <textarea id="transcript" placeholder="Transcripcion editable — corrige si es necesario y pulsa Enviar" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendTranscript()}" style="flex:1;background:none;border:none;color:#e0d8c8;font-family:'IBM Plex Sans',sans-serif;font-size:.9rem;line-height:1.6;resize:none;outline:none;min-height:48px;font-style:italic"></textarea>
-      <button onclick="sendTranscript()" style="padding:8px 14px;background:#d4820a;color:#0a0a0a;border:none;font-family:monospace;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;font-weight:500;cursor:pointer;border-radius:2px;white-space:nowrap;align-self:flex-end">Enviar</button>
+    <div class="box">
+      <div class="lbl">Pregunta detectada</div>
+      <div class="transcript empty" id="transcript">Esperando transcripcion...</div>
     </div>
     <div class="resp-box">
       <div class="resp-hdr"><span class="resp-lbl">Respuesta sugerida</span></div>
@@ -133,31 +134,27 @@ function setTab(t){
   document.getElementById('panel-practice').classList.toggle('active',t==='practice');
 }
 
-function sendTranscript(){
-  var q=document.getElementById('transcript').value.trim();
-  if(!q)return;
-  answerLive(q);
-}
-
-function sendManual(){
-  var el=document.getElementById('manual-input');
-  var q=el.value.trim();
-  if(!q)return;
-  setT(q,false);
-  el.value='';
-  answerLive(q);
-}
-
 function toggleMic(){ listening?stopMic():startMic(); }
 
 function startMic(){
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){setT('Necesitas Chrome',true);return;}
-  rec=new SR();rec.lang='es-ES';rec.continuous=false;rec.interimResults=true;
+  rec=new SR();rec.lang='es-ES';rec.continuous=true;rec.interimResults=true;
   var fin='';
-  rec.onresult=function(e){fin=Array.from(e.results).map(function(r){return r[0].transcript;}).join('');setT(fin,false);};
-  rec.onend=function(){stopMic();if(fin&&fin.trim().length>3)answerLive(fin);};
-  rec.onerror=function(){stopMic();};
+  rec.onresult=function(e){
+    fin=Array.from(e.results).map(function(r){return r[0].transcript;}).join(' ').trim();
+    setT(fin,false);
+  };
+  rec.onend=function(){
+    // Si sigue en modo escucha (no parado manualmente), reinicia para evitar cortes del navegador
+    if(listening){rec.start();return;}
+    if(fin&&fin.trim().length>3)answerLive(fin);
+    fin='';
+  };
+  rec.onerror=function(e){
+    if(e.error==='no-speech'&&listening){rec.start();return;}
+    stopMic();
+  };
   rec.start();listening=true;
   document.getElementById('mic-btn').classList.add('listening');
   document.getElementById('mic-btn').textContent='Stop';
@@ -166,17 +163,27 @@ function startMic(){
 }
 
 function stopMic(){
-  listening=false;if(rec)rec.stop();
+  listening=false;if(rec){try{rec.stop();}catch(e){}}
   document.getElementById('mic-btn').classList.remove('listening');
-  document.getElementById('mic-btn').textContent='\uD83C\uDF08';
   document.getElementById('mic-btn').innerHTML='&#127908;';
   document.getElementById('mic-lbl').textContent='Pulsa para escuchar la pregunta';
   document.getElementById('mic-lbl').classList.remove('on');
+  // Muestra botón enviar solo si hay transcripción
+  var t=document.getElementById('transcript').textContent;
+  document.getElementById('send-btn').style.display=(t&&t.trim().length>3)?'block':'none';
+}
+
+function sendTranscript(){
+  var t=document.getElementById('transcript').textContent;
+  if(t&&t.trim().length>3){
+    document.getElementById('send-btn').style.display='none';
+    answerLive(t);
+  }
 }
 
 function setT(t,empty){
   var el=document.getElementById('transcript');
-  el.value=empty?'':t;
+  el.textContent=t;el.classList.toggle('empty',empty);
 }
 
 async function answerLive(q){
@@ -225,3 +232,4 @@ buildTopics();
 </script>
 </body>
 </html>
+
