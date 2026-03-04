@@ -123,7 +123,7 @@ module.exports = async (req, res) => {
 
   try {
     const msg = await callWithRetry(() => client.messages.create(payload), {
-      retries: 4,
+      retries: 5,
       baseMs: 350,
       maxMs: 2500,
     });
