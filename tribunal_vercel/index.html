@@ -18,14 +18,12 @@ header{border-bottom:1px solid var(--border);padding:16px 28px;display:flex;alig
 .tab.active{color:var(--amber);background:rgba(212,130,10,.08)}
 .main{max-width:820px;margin:0 auto;padding:28px;display:flex;flex-direction:column;gap:20px;width:100%}
 .panel{display:none}.panel.active{display:flex;flex-direction:column;gap:20px}
-/* MIC */
 .mic-zone{display:flex;flex-direction:column;align-items:center;gap:14px;padding:36px 20px;border:1px solid var(--border);background:var(--surface);border-radius:2px}
 .mic-btn{width:80px;height:80px;border-radius:50%;border:2px solid var(--border);background:var(--surface2);color:var(--dim);font-size:1.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
 .mic-btn.listening{border-color:var(--red);color:var(--red);animation:pulse 1.2s infinite}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(192,57,43,.3)}50%{box-shadow:0 0 0 14px rgba(192,57,43,0)}}
 .mic-lbl{font-family:monospace;font-size:.65rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase}
 .mic-lbl.on{color:var(--red)}
-/* BOXES */
 .box{padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:2px}
 .lbl{font-family:monospace;font-size:.62rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
 .transcript{font-size:.9rem;line-height:1.6;color:var(--text);font-style:italic;min-height:22px}
@@ -39,7 +37,6 @@ header{border-bottom:1px solid var(--border);padding:16px 28px;display:flex;alig
 .resp-cnt{padding:18px 20px;font-size:.9rem;line-height:1.8;min-height:60px}
 .resp-cnt.empty{color:var(--dim)}
 .resp-cnt.loading{color:var(--dim);font-style:italic}
-/* PRACTICE */
 .topics{display:flex;flex-wrap:wrap;gap:6px}
 .tbtn{padding:7px 13px;background:var(--surface);border:1px solid var(--border);color:var(--dim);font-family:'IBM Plex Sans',sans-serif;font-size:.75rem;cursor:pointer;border-radius:2px;transition:all .15s}
 .tbtn.active{border-color:var(--amber);color:var(--amber);background:rgba(212,130,10,.1)}
@@ -50,7 +47,6 @@ header{border-bottom:1px solid var(--border);padding:16px 28px;display:flex;alig
 .q-txt{font-family:'Playfair Display',serif;font-size:1rem;line-height:1.5}
 .hist-item{padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:2px;font-size:.82rem;line-height:1.65}
 .hist-q{font-family:monospace;font-size:.62rem;color:var(--amber-dim);margin-bottom:5px}
-/* SPINNER */
 .sp{display:inline-block;width:12px;height:12px;border:2px solid var(--border);border-top-color:var(--amber);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .err{color:#e07060}
@@ -104,7 +100,6 @@ header{border-bottom:1px solid var(--border);padding:16px 28px;display:flex;alig
 
 </div>
 <script>
-  
 var TOPICS=[
   {id:'all',label:'Todos'},
   {id:'intro',label:'Presentación'},
@@ -116,7 +111,7 @@ var TOPICS=[
   {id:'datos',label:'Calidad de datos'},
   {id:'comunicacion',label:'Comunicación'}
 ];
-  
+
 var QS={
   intro:[
     "Cuéntame sobre ti y por qué has orientado tu perfil hacia analítica de datos.",
@@ -172,7 +167,7 @@ async function askClaude(question) {
   return data.answer || 'Sin respuesta.';
 }
 
-var tab='listen', topic='all', listening=false, rec=null, history=[];
+var tab='listen', topic='all', listening=false, rec=null, qaHistory=[];
 
 function setTab(t){
   tab=t;
@@ -193,7 +188,6 @@ function startMic(){
     setT(fin,false);
   };
   rec.onend=function(){
-    // Si sigue en modo escucha (no parado manualmente), reinicia para evitar cortes del navegador
     if(listening){rec.start();return;}
     if(fin&&fin.trim().length>3)answerLive(fin);
     fin='';
@@ -258,14 +252,13 @@ async function genQ(){
   try{
     var a=await askClaude(q);
     el.textContent=a;el.className='resp-cnt';
-    if(!Array.isArray(history)) history=[];
-    history.unshift({q:q,a:a});renderHist();
+    qaHistory.unshift({q:q,a:a});renderHist();
   }catch(e){el.innerHTML='<span class="err">Error: '+e.message+'</span>';el.className='resp-cnt';}
   document.getElementById('gbtn').disabled=false;
 }
 
 function renderHist(){
-  document.getElementById('hist').innerHTML=history.slice(1,6).map(function(i){
+  document.getElementById('hist').innerHTML=qaHistory.slice(1,6).map(function(i){
     return '<div class="hist-item"><div class="hist-q">Q: '+i.q+'</div><div>'+i.a+'</div></div>';
   }).join('');
 }
