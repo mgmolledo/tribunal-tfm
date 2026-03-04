@@ -8,8 +8,10 @@ REGLAS:
 - Responde solo sobre este TFM.
 - Máximo 2 frases.
 - Máximo 60 palabras.
-- Español técnico-académico fluido (no telegráfico).
-- Sin frases de relleno ni introducciones genéricas.`;
+- Español claro y natural, como explicándolo oralmente a un tribunal.
+- Evita jerga econométrica innecesaria.
+- Explica ideas complejas con lenguaje simple sin perder precisión.
+- Evita introducciones genéricas o frases de relleno.`;
 
 // 2) Canonical facts: TODO el bloque largo va como contexto (no como reglas)
 const CANON = `DATOS CANÓNICOS (hechos del TFM):
