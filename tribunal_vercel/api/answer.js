@@ -170,8 +170,8 @@ module.exports = async (req, res) => {
 
   try {
     const msg = await client.messages.create({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 150,
+      model: 'claude-haiku-4.5',
+      max_tokens: 200,
       system: SYSTEM,
       messages: [{ role: 'user', content: question }]
     });
