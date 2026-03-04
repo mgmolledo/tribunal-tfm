@@ -115,7 +115,7 @@ module.exports = async (req, res) => {
 
   // Use stable model to reduce overload errors
   const payload = {
-    model: "claude-3-5-haiku-latest",
+    model: "claude-3-haiku-20240307",
     max_tokens: 180, // allow fluency; hard-cap after
     system: SYSTEM,
     messages: [{ role: "user", content: `${CANON}\n\nPregunta: ${question}` }],
