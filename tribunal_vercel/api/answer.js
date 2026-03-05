@@ -1,10 +1,8 @@
 // api/answer.js
 const Anthropic = require("@anthropic-ai/sdk");
 
-// Modelo por defecto estable (según docs oficiales de modelos)
-const DEFAULT_MODEL = process.env.ANTHROPIC_MODEL || "claude-haiku-4-5-20251001"; // :contentReference[oaicite:1]{index=1}
+const DEFAULT_MODEL = process.env.ANTHROPIC_MODEL || "claude-haiku-4-5-20251001";
 
-// Reglas (cortas) + estilo oral (no académico)
 const SYSTEM = `Eres el asistente de Manuel para entrevistas de trabajo de Data Analyst junior (VBTravelGroup, Oviedo).
 
 Reglas:
@@ -17,12 +15,22 @@ Reglas:
 - Admite lagunas sin rellenarlas. Sobre todo del sector turístico.
 - Cierra cada respuesta con remate claro y para.`;
 
-// “Entrenamiento” (contexto) — edita aquí lo que quieras
+const SYSTEM_PRACTICE = `Eres un coach de entrevistas para el puesto de Data Analyst Junior en VBTravelGroup (Oviedo).
+
+Reglas:
+- Genera la respuesta modelo completa que debería dar Manuel en una entrevista real.
+- Español natural, riguroso, seguro. Sin tono académico.
+- Máximo 5 frases y 120 palabras.
+- Si es pregunta técnica (SQL, Python), incluye el razonamiento paso a paso y un ejemplo concreto.
+- Si es pregunta de caso, estructura: hipótesis → datos → análisis → decisión.
+- Si es pregunta personal, usa el perfil de Manuel: puente finanzas→analítica, curva rápida, enfoque negocio.
+- Cierra con remate claro.`;
+
 const CANON = `Contexto del candidato (Manuel):
 - Perfil puente: experiencia en finanzas/control y analítica de negocio, transición a Data Analyst más técnico.
 - Herramientas: SQL, Python (pandas), BI y visualización; enfoque práctico y orientado a decisión.
 - Fortalezas: entender negocio, ordenar problemas, limpieza de datos, comunicar claro a no técnicos.
-- Debilidad presentable: menos experiencia “industrial” como DA puro; compensado con curva de aprendizaje rápida.
+- Debilidad presentable: menos experiencia "industrial" como DA puro; compensado con curva de aprendizaje rápida.
 
 Sector viajes (VBTravelGroup) — temas típicos:
 - Demanda y estacionalidad (por mes/semana, festivos, eventos).
@@ -37,7 +45,7 @@ Expectativa de respuestas:
 
 Preguntas frecuentes:
 - Cuéntame sobre ti / por qué este puesto / por qué viajes.
-- Caso práctico: “¿cómo analizarías caída de conversión?”.
+- Caso práctico: "¿cómo analizarías caída de conversión?".
 - Técnica: SQL (CTE, joins, window), Python básico (bucles/agrupaciones), métricas.`;
 
 function capWords(text, n) {
@@ -49,10 +57,15 @@ function capSentences(text, n) {
   return parts.slice(0, n).join("").trim();
 }
 
-function normalizeAnswer(raw) {
+function normalizeAnswer(raw, mode) {
   let a = (raw || "").trim();
-  a = capSentences(a, 2);
-  a = capWords(a, 70);
+  if (mode === 'practice') {
+    a = capSentences(a, 5);
+    a = capWords(a, 120);
+  } else {
+    a = capSentences(a, 2);
+    a = capWords(a, 70);
+  }
   return a || "No tengo suficiente contexto para responder con precisión.";
 }
 
@@ -68,19 +81,15 @@ async function callAnthropicWithRetry(client, payload, maxRetries = 4) {
     } catch (e) {
       lastErr = e;
       const status = e?.status || e?.response?.status;
-      const msg = String(e?.message || "");
 
-      // Reintenta en 529 (overloaded) y 429 (rate limit)
       if ((status === 529 || status === 429) && i < maxRetries) {
-        const backoff = 400 * Math.pow(2, i); // 400, 800, 1600, 3200...
+        const backoff = 400 * Math.pow(2, i);
         await sleep(backoff);
         continue;
       }
 
-      // Si el modelo no existe (404), intenta fallback rápido
       if (status === 404 && i < maxRetries) {
-        // Cambia a un ID alternativo documentado
-        payload.model = "claude-haiku-4-5"; // :contentReference[oaicite:2]{index=2}
+        payload.model = "claude-haiku-4-5";
         await sleep(150);
         continue;
       }
@@ -102,6 +111,7 @@ module.exports = async (req, res) => {
   try {
     const body = req.body || {};
     const question = String(body.question || "").trim();
+    const mode = String(body.mode || 'live');
     if (!question) return res.status(400).json({ error: "Falta question" });
 
     const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -111,8 +121,8 @@ module.exports = async (req, res) => {
 
     const payload = {
       model: DEFAULT_MODEL,
-      max_tokens: 220, // deja espacio a respuesta natural; luego capamos
-      system: SYSTEM,
+      max_tokens: mode === 'practice' ? 400 : 220,
+      system: mode === 'practice' ? SYSTEM_PRACTICE : SYSTEM,
       messages: [
         {
           role: "user",
@@ -123,7 +133,7 @@ module.exports = async (req, res) => {
 
     const msg = await callAnthropicWithRetry(client, payload);
     const raw = msg?.content?.[0]?.text || "";
-    const answer = normalizeAnswer(raw);
+    const answer = normalizeAnswer(raw, mode);
 
     return res.status(200).json({ answer });
   } catch (err) {
