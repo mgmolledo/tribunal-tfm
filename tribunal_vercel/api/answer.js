@@ -16,7 +16,6 @@ Reglas:
 - Estructura siempre: diagnóstico en una frase → acción en una frase → remate.
 - Nunca listes opciones con guiones o bullets. Prosa continua únicamente.
 - Evita tecnicismos sin explicación. Si usas "imputar", di qué significa en la misma frase.
-- Genera la respuesta modelo completa que debería dar Manuel en una entrevista real.
 - Español natural, riguroso, seguro. Sin tono académico.
 - Máximo 3 frases y 60 palabras.
 - Estructura: diagnóstico → acción → remate. Prosa continua, sin bullets ni guiones.
@@ -39,7 +38,6 @@ Reglas:
 - Estructura siempre: diagnóstico en una frase → acción en una frase → remate.
 - Nunca listes opciones con guiones o bullets. Prosa continua únicamente.
 - Evita tecnicismos sin explicación. Si usas "imputar", di qué significa en la misma frase.
-- Genera la respuesta modelo completa que debería dar Manuel en una entrevista real.
 - Español natural, riguroso, seguro. Sin tono académico.
 - Máximo 3 frases y 60 palabras.
 - Estructura: diagnóstico → acción → remate. Prosa continua, sin bullets ni guiones.
