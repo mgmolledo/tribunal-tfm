@@ -155,12 +155,12 @@ var QS={
   ]
 };
 
-async function askClaude(question) {
+async function askClaude(question, mode) {
   var base = window.location.origin;
   var resp = await fetch(base + '/api/answer', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({question: question})
+    body: JSON.stringify({question: question, mode: mode || 'live'})
   });
   var data = await resp.json();
   if (!resp.ok) throw new Error(data.error || resp.statusText);
@@ -250,7 +250,7 @@ async function genQ(){
   el.innerHTML='<span class="sp"></span>Consultando...';el.className='resp-cnt loading';
   document.getElementById('gbtn').disabled=true;
   try{
-    var a=await askClaude(q);
+    var a=await askClaude(q,'practice');
     el.textContent=a;el.className='resp-cnt';
     qaHistory.unshift({q:q,a:a});renderHist();
   }catch(e){el.innerHTML='<span class="err">Error: '+e.message+'</span>';el.className='resp-cnt';}
