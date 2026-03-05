@@ -14,8 +14,7 @@ Reglas:
 - Evita jerga innecesaria y tono académico.
 - Responde solo lo preguntado. 
 - Cuantifica logros. 
-- Estructura antes de hablar. 
-- Admite lagunas sin rellenarlas. 
+- Admite lagunas sin rellenarlas. Sobre todo del sector turístico.
 - Cierra cada respuesta con remate claro y para.`;
 
 // “Entrenamiento” (contexto) — edita aquí lo que quieras
