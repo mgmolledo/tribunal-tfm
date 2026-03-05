@@ -25,7 +25,7 @@ Reglas:
 - Si es pregunta técnica (SQL, Python), incluye el razonamiento en lenguaje natural con un ejemplo concreto.
 - Si es pregunta de caso, estructura: hipótesis → datos → decisión.
 - Si es pregunta personal, usa el perfil de Manuel: puente finanzas→analítica, curva rápida, enfoque negocio.
-- Cierra con remate claro.`;`;
+- Cierra con remate claro.`;
 
 const SYSTEM_PRACTICE = `Eres un coach de entrevistas para el puesto de Data Analyst Junior en VBTravelGroup (Oviedo). - Estructura siempre: diagnóstico en una frase → acción en una frase → remate.
 - Nunca listes opciones con guiones o bullets. Prosa continua únicamente.
@@ -47,7 +47,7 @@ Reglas:
 - Si es pregunta técnica (SQL, Python), incluye el razonamiento en lenguaje natural con un ejemplo concreto.
 - Si es pregunta de caso, estructura: hipótesis → datos → decisión.
 - Si es pregunta personal, usa el perfil de Manuel: puente finanzas→analítica, curva rápida, enfoque negocio.
-- Cierra con remate claro.`;`;
+- Cierra con remate claro.`;
 
 const CANON = `Contexto del candidato (Manuel):
 - Perfil puente: experiencia en finanzas/control y analítica de negocio, transición a Data Analyst más técnico.
