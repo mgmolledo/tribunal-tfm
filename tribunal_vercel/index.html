@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tribunal TFM — Health Analytics</title>
+<title>Data Interview Prep — mgmolledo</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap');
 :root{--black:#0a0a0a;--amber:#d4820a;--amber-dim:#6a4200;--surface:#111;--surface2:#181818;--border:#2a2a2a;--text:#e0d8c8;--dim:#6a6050;--red:#c0392b}
@@ -27,14 +27,13 @@ header{border-bottom:1px solid var(--border);padding:16px 28px;display:flex;alig
 .box{padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:2px}
 .lbl{font-family:monospace;font-size:.62rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
 .transcript{font-size:.9rem;line-height:1.6;color:var(--text);font-style:italic;min-height:22px}
-.transcript.empty{color:var(--dim);font-style:normal}
 .q-input{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:.9rem;line-height:1.6;padding:12px 14px;resize:vertical;min-height:60px;border-radius:2px;font-style:italic}
 .q-input:focus{outline:none;border-color:var(--amber-dim)}
 .send-row{display:flex;justify-content:flex-end}
 .resp-box{border:1px solid var(--amber-dim);background:rgba(212,130,10,.04);border-radius:2px}
 .resp-hdr{padding:10px 18px;border-bottom:1px solid var(--amber-dim);background:rgba(212,130,10,.06)}
 .resp-lbl{font-family:monospace;font-size:.62rem;color:var(--amber);letter-spacing:.1em;text-transform:uppercase}
-.resp-cnt{padding:18px 20px;font-size:.9rem;line-height:1.8;min-height:60px}
+.resp-cnt{padding:18px 20px;font-size:.9rem;line-height:1.8;min-height:60px;white-space:pre-wrap}
 .resp-cnt.empty{color:var(--dim)}
 .resp-cnt.loading{color:var(--dim);font-style:italic}
 .topics{display:flex;flex-wrap:wrap;gap:6px}
@@ -50,45 +49,46 @@ header{border-bottom:1px solid var(--border);padding:16px 28px;display:flex;alig
 .sp{display:inline-block;width:12px;height:12px;border:2px solid var(--border);border-top-color:var(--amber);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .err{color:#e07060}
+code{font-family:monospace;background:var(--surface2);padding:1px 5px;border-radius:2px;font-size:.82rem;color:var(--amber)}
 </style>
 </head>
 <body>
 <header>
-  <span class="h1">Tribunal TFM</span>
-  <span class="sub">Health Analytics &middot; Determinantes Globales de la Esperanza de Vida</span>
+  <span class="h1">Data Interview Prep</span>
+  <span class="sub">Python &middot; SQL &middot; ML &middot; Stats &middot; Data Engineering &middot; mgmolledo</span>
 </header>
 <div class="tabs">
-  <button class="tab active" onclick="setTab('listen')">&#127908; Defensa en vivo</button>
-  <button class="tab" onclick="setTab('practice')">&#9889; Practica</button>
+  <button class="tab active" onclick="setTab('listen')">&#127908; Pregunta libre</button>
+  <button class="tab" onclick="setTab('practice')">&#9889; Simulacro</button>
 </div>
 <div class="main">
 
   <div id="panel-listen" class="panel active">
     <div class="mic-zone">
       <button class="mic-btn" id="mic-btn" onclick="toggleMic()">&#127908;</button>
-      <span class="mic-lbl" id="mic-lbl">Pulsa para escuchar la pregunta</span>
+      <span class="mic-lbl" id="mic-lbl">Pulsa para dictar la pregunta</span>
     </div>
     <div class="box">
-      <div class="lbl">Pregunta detectada — edita si es necesario</div>
-      <textarea class="q-input" id="transcript" placeholder="Escribe o dicta la pregunta aquí..."></textarea>
+      <div class="lbl">Pregunta — edita si es necesario</div>
+      <textarea class="q-input" id="transcript" placeholder="Escribe o dicta cualquier pregunta técnica de entrevista..."></textarea>
       <div class="send-row" style="margin-top:10px">
         <button class="gbtn" id="send-btn" onclick="sendTranscript()">Enviar pregunta</button>
       </div>
     </div>
     <div class="resp-box">
-      <div class="resp-hdr"><span class="resp-lbl">Respuesta sugerida</span></div>
-      <div class="resp-cnt empty" id="live-resp">La respuesta aparecera aqui.</div>
+      <div class="resp-hdr"><span class="resp-lbl">Respuesta de coaching</span></div>
+      <div class="resp-cnt empty" id="live-resp">La respuesta aparecerá aquí.</div>
     </div>
   </div>
 
   <div id="panel-practice" class="panel">
     <div>
-      <div class="lbl" style="margin-bottom:10px">Filtrar por bloque</div>
+      <div class="lbl" style="margin-bottom:10px">Bloque temático</div>
       <div class="topics" id="topics"></div>
     </div>
-    <button class="gbtn" id="gbtn" onclick="genQ()">Lanzar pregunta</button>
+    <button class="gbtn" id="gbtn" onclick="genQ()">&#9889; Lanzar pregunta</button>
     <div class="q-box" id="q-box" style="display:none">
-      <div class="q-lbl">Pregunta del tribunal</div>
+      <div class="q-lbl">Pregunta de entrevista</div>
       <div class="q-txt" id="q-txt"></div>
     </div>
     <div class="resp-box" id="p-resp-box" style="display:none">
@@ -101,77 +101,146 @@ header{border-bottom:1px solid var(--border);padding:16px 28px;display:flex;alig
 </div>
 <script>
 var TOPICS=[
-  {id:'all',label:'Todos'},
-  {id:'intro',label:'Presentación'},
-  {id:'motivacion',label:'Motivación'},
-  {id:'empresa',label:'Empresa/Viajes'},
-  {id:'sql',label:'SQL'},
-  {id:'python',label:'Python'},
-  {id:'caso',label:'Caso negocio'},
-  {id:'datos',label:'Calidad de datos'},
-  {id:'comunicacion',label:'Comunicación'}
+  {id:'all',       label:'Todos'},
+  {id:'python',    label:'Python'},
+  {id:'sql',       label:'SQL'},
+  {id:'ml',        label:'Machine Learning'},
+  {id:'stats',     label:'Estadística'},
+  {id:'feature',   label:'Feature Engineering'},
+  {id:'de',        label:'Data Engineering'},
+  {id:'system',    label:'System Design'},
+  {id:'trampas',   label:'Trampas clásicas'},
+  {id:'proyectos', label:'Mis proyectos'},
 ];
 
 var QS={
-  intro:[
-    "Cuéntame sobre ti y por qué has orientado tu perfil hacia analítica de datos.",
-    "Resume un proyecto del que estés orgulloso: objetivo, datos, enfoque y resultado.",
-    "¿Cuál es tu punto fuerte para un rol junior y cuál es tu punto a mejorar?"
-  ],
-  motivacion:[
-    "¿Por qué quieres un puesto de Analista de Datos Junior y qué esperas aprender rápido?",
-    "¿Qué te atrae de trabajar con datos en una empresa de viajes y ventas online?",
-    "¿Qué tipo de tareas te motivan más: reporting, análisis ad-hoc o automatización?"
-  ],
-  empresa:[
-    "¿Qué métricas revisarías cada mañana en una empresa de viajes (ventas, margen, cancelaciones, funnel)?",
-    "Si suben las cancelaciones, ¿qué hipótesis planteas y cómo las validarías con datos?",
-    "¿Cómo detectarías estacionalidad y cómo la usarías para planificar marketing y capacidad?"
+  python:[
+    "¿Cuál es la diferencia entre iloc y loc en pandas?",
+    "¿Cuándo usarías un generator en lugar de una list comprehension?",
+    "¿Qué es el GIL de Python y cómo afecta al paralelismo?",
+    "¿Cómo vectorizarías una operación que ahora haces con apply()?",
+    "¿Qué ventajas tiene polars sobre pandas para datasets grandes?",
+    "Explica qué hace este código: df.groupby('cat')['val'].transform('mean')",
+    "¿Cómo funciona un decorador en Python? Pon un ejemplo útil en datos.",
+    "¿Cuándo usarías dataclasses en vez de un dict para estructurar datos?",
+    "¿Cómo harías un merge de dos DataFrames con claves duplicadas?",
+    "¿Qué es memory_usage() y por qué importa en producción?",
   ],
   sql:[
-    "Escribe una CTE que calcule reservas e ingresos por destino y mes, y devuelva el top 3 destinos por mes.",
-    "Tienes una tabla de reservas con customer_id y booking_date: ¿cómo detectas repetidores con window functions?",
-    "Hay duplicados por reintentos de pago: ¿cómo deduplicas quedándote con el último estado por booking_id?"
+    "¿Cuándo usarías una CTE en lugar de una subquery?",
+    "Explica ROW_NUMBER vs RANK vs DENSE_RANK con un ejemplo.",
+    "¿Cómo funciona LAG() y para qué lo usarías en análisis de datos?",
+    "¿Qué es un índice covering y cuándo lo crearías?",
+    "¿Cómo identificarías duplicados en una tabla SQL sin usar DISTINCT?",
+    "¿Cuál es la diferencia entre WHERE y HAVING?",
+    "¿Cómo harías un anti-join en SQL?",
+    "¿Qué diferencia hay entre particionar y clusterizar en BigQuery?",
+    "¿Cómo optimizarías una query que escanea 500GB en BigQuery?",
+    "¿Cómo se comportan los NULLs en un GROUP BY?",
   ],
-  python:[
-    "Haz un bucle for que recorra una lista de importes y calcule suma y media sin usar librerías.",
-    "Dada una lista de destinos, cuenta ocurrencias con un diccionario y devuelve el top 3.",
-    "En pandas: agrupa por canal y mes, calcula reservas y revenue, y ordena por revenue."
+  ml:[
+    "¿Cuándo usarías Random Forest en lugar de Gradient Boosting?",
+    "¿Qué es el bias-variance tradeoff y cómo lo gestionas en práctica?",
+    "¿Cuándo usarías AUC-ROC y cuándo la curva PR?",
+    "¿Cómo evitarías data leakage en un pipeline de ML?",
+    "¿Qué es early stopping y cómo funciona en XGBoost?",
+    "¿Cómo validarías un modelo de series temporales sin hacer data leakage?",
+    "¿Cuándo usarías SMOTE y cuándo ajustarías class_weight?",
+    "¿Qué diferencia hay entre bagging y boosting?",
+    "¿Cómo interpretarías un modelo con R² de 0.99 en train y 0.70 en test?",
+    "¿Qué es un Pipeline de sklearn y por qué usarlo en producción?",
   ],
-  caso:[
-    "La conversión del funnel cae: ¿qué cortes harías y qué señales buscarías para aislar la causa?",
-    "Sube el tráfico pero baja el revenue: ¿qué análisis harías para separar mix de producto vs precio vs conversión?",
-    "Marketing quiere subir inversión: ¿cómo evaluarías incrementalidad con datos disponibles?"
+  stats:[
+    "¿Qué significa exactamente un p-valor de 0.03?",
+    "¿Cuál es la diferencia entre intervalo de confianza e intervalo de predicción?",
+    "¿Cómo calcularías el tamaño muestral de un A/B test?",
+    "¿Qué es el problema de las comparaciones múltiples y cómo lo resolverías?",
+    "¿Cuándo usarías correlación de Spearman en lugar de Pearson?",
+    "Explica la paradoja de Simpson con un ejemplo real.",
+    "¿Qué es el efecto mínimo detectable en un experimento?",
+    "¿Cuál es la diferencia entre error tipo I y tipo II?",
+    "¿Qué supuestos viola la regresión lineal con más frecuencia en datos reales?",
+    "¿Cómo detectarías multicolinealidad y qué harías con ella?",
   ],
-  datos:[
-    "Tienes 30% de valores faltantes en una variable clave: ¿qué opciones tienes y cómo decides?",
-    "Detectas outliers en precio por destino: ¿cómo distingues error de caso real y qué harías en cada caso?",
-    "Dos fuentes no cuadran en ventas diarias: ¿qué checks harías antes de tocar los datos?"
+  feature:[
+    "¿Cuándo usarías target encoding en lugar de one-hot encoding?",
+    "¿Qué es feature leakage y cómo lo detectarías?",
+    "¿Cómo imputarías datos faltantes en una serie temporal?",
+    "¿Cuándo escalarías features y cuándo no haría falta?",
+    "¿Cómo crearías features de lag para un modelo predictivo?",
+    "¿Qué es la importancia de SHAP y en qué se diferencia de la importancia de RandomForest?",
+    "¿Cómo tratarías una variable categórica con 500 categorías?",
+    "¿Qué es la mutual information y cuándo la usarías para selección de features?",
+    "¿Cómo detectarías y tratarías outliers antes de entrenar un modelo?",
+    "¿Qué ventajas tiene KNN imputation sobre imputación por media?",
   ],
-  comunicacion:[
-    "Explica un análisis técnico a alguien de negocio en 20 segundos, sin jerga.",
-    "¿Cómo presentas un resultado con incertidumbre sin prometer más de lo que dicen los datos?",
-    "Si negocio no está de acuerdo con tu conclusión, ¿cómo lo gestionas con evidencias?"
-  ]
+  de:[
+    "¿Cuál es la diferencia entre ETL y ELT? ¿Cuándo elegirías cada uno?",
+    "¿Qué es dbt y qué problema resuelve?",
+    "¿Cómo diseñarías un pipeline de datos idempotente?",
+    "¿Qué es un DAG en Airflow y cómo gestionarías los reintentos?",
+    "¿Cuándo usarías streaming en lugar de batch processing?",
+    "¿Qué es un data lakehouse y en qué se diferencia de un data warehouse?",
+    "¿Cómo particionarías una tabla en BigQuery para optimizar costes?",
+    "¿Qué son los tests de dbt y qué tipos existen?",
+    "¿Cómo versionarías datos en un pipeline de producción?",
+    "¿Qué es el concepto de observabilidad en pipelines de datos?",
+  ],
+  system:[
+    "Diseña un sistema de recomendación para un ecommerce con 10M de usuarios.",
+    "¿Cómo diseñarías un pipeline de detección de anomalías en tiempo real?",
+    "¿Qué es un feature store y cuándo tiene sentido construirlo?",
+    "¿Cómo garantizarías la calidad de datos en un pipeline productivo?",
+    "¿Cómo escalarías un modelo de ML que actualmente tarda 2 horas en inferencia batch?",
+    "Diseña el esquema de tablas para un sistema de tracking de eventos de usuario.",
+    "¿Cómo orquestarías un pipeline que depende de 5 fuentes externas con SLAs distintos?",
+    "¿Qué trade-offs considerarías entre consistencia y disponibilidad en un data pipeline?",
+  ],
+  trampas:[
+    "¿El p-valor es la probabilidad de que la hipótesis nula sea cierta?",
+    "¿LEFT JOIN y LEFT OUTER JOIN son lo mismo?",
+    "¿Un R² alto garantiza que el modelo es bueno?",
+    "¿La correlación de Pearson detecta relaciones no lineales?",
+    "¿La feature importance de Random Forest es siempre fiable?",
+    "¿Accuracy es siempre la mejor métrica para clasificación?",
+    "¿Más datos siempre mejoran un modelo?",
+    "¿Normalizar features siempre mejora el rendimiento de un modelo?",
+    "¿iloc y loc son intercambiables si el índice es numérico?",
+    "¿Un modelo con overfitting siempre tiene R² perfecto en train?",
+  ],
+  proyectos:[
+    "Explica el ETL del SME Benchmark: fuente, transformaciones y output.",
+    "¿Por qué elegiste KNN para imputar en el TFM y qué alternativas consideraste?",
+    "¿Cómo justificas el R² de 0.986 en el modelo ML del TFM sin que sea overfitting?",
+    "¿Qué es el Power BI MCP Server y qué problema resuelve?",
+    "¿Por qué el coeficiente del gasto sanitario es negativo en TWFE y positivo en OLS?",
+    "¿Cómo verificaste el supuesto de tendencias paralelas en el DiD del TFM?",
+    "¿Qué aprendiste del análisis de eficiencia frontier que no esperabas?",
+    "¿Cómo automatizarías la actualización del SME Benchmark con datos nuevos del BdE?",
+    "¿Qué harías diferente en el TFM si pudieras repetirlo?",
+    "¿Cómo conectarías el output SQLite del SME Benchmark a Power BI en producción?",
+  ],
 };
 
-async function askClaude(question, mode) {
+async function askClaude(question) {
   var base = window.location.origin;
   var resp = await fetch(base + '/api/answer', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({question: question, mode: mode || 'live'})
+    body: JSON.stringify({question: question})
   });
   var data = await resp.json();
   if (!resp.ok) throw new Error(data.error || resp.statusText);
   return data.answer || 'Sin respuesta.';
 }
 
-var tab='listen', topic='all', listening=false, rec=null, qaHistory=[];
+var tab='listen', topic='all', listening=false, rec=null, history=[];
 
 function setTab(t){
   tab=t;
-  document.querySelectorAll('.tab').forEach(function(b,i){b.classList.toggle('active',(i===0&&t==='listen')||(i===1&&t==='practice'));});
+  document.querySelectorAll('.tab').forEach(function(b,i){
+    b.classList.toggle('active',(i===0&&t==='listen')||(i===1&&t==='practice'));
+  });
   document.getElementById('panel-listen').classList.toggle('active',t==='listen');
   document.getElementById('panel-practice').classList.toggle('active',t==='practice');
 }
@@ -180,16 +249,15 @@ function toggleMic(){ listening?stopMic():startMic(); }
 
 function startMic(){
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){setT('Necesitas Chrome',true);return;}
+  if(!SR){alert('Necesitas Chrome para usar el micrófono.');return;}
   rec=new SR();rec.lang='es-ES';rec.continuous=true;rec.interimResults=true;
   var fin='';
   rec.onresult=function(e){
     fin=Array.from(e.results).map(function(r){return r[0].transcript;}).join(' ').trim();
-    setT(fin,false);
+    document.getElementById('transcript').value=fin;
   };
   rec.onend=function(){
     if(listening){rec.start();return;}
-    if(fin&&fin.trim().length>3)answerLive(fin);
     fin='';
   };
   rec.onerror=function(e){
@@ -207,18 +275,13 @@ function stopMic(){
   listening=false;if(rec){try{rec.stop();}catch(e){}}
   document.getElementById('mic-btn').classList.remove('listening');
   document.getElementById('mic-btn').innerHTML='&#127908;';
-  document.getElementById('mic-lbl').textContent='Pulsa para escuchar la pregunta';
+  document.getElementById('mic-lbl').textContent='Pulsa para dictar la pregunta';
   document.getElementById('mic-lbl').classList.remove('on');
 }
 
 function sendTranscript(){
   var t=document.getElementById('transcript').value.trim();
   if(t.length>3)answerLive(t);
-}
-
-function setT(t,empty){
-  var el=document.getElementById('transcript');
-  el.value=t;
 }
 
 async function answerLive(q){
@@ -234,7 +297,11 @@ function buildTopics(){
     var b=document.createElement('button');
     b.className='tbtn'+(t.id==='all'?' active':'');
     b.textContent=t.label;
-    b.onclick=function(){topic=t.id;document.querySelectorAll('.tbtn').forEach(function(x){x.classList.remove('active');});b.classList.add('active');};
+    b.onclick=function(){
+      topic=t.id;
+      document.querySelectorAll('.tbtn').forEach(function(x){x.classList.remove('active');});
+      b.classList.add('active');
+    };
     c.appendChild(b);
   });
 }
@@ -250,16 +317,18 @@ async function genQ(){
   el.innerHTML='<span class="sp"></span>Consultando...';el.className='resp-cnt loading';
   document.getElementById('gbtn').disabled=true;
   try{
-    var a=await askClaude(q,'practice');
+    var a=await askClaude(q);
     el.textContent=a;el.className='resp-cnt';
-    qaHistory.unshift({q:q,a:a});renderHist();
-  }catch(e){el.innerHTML='<span class="err">Error: '+e.message+'</span>';el.className='resp-cnt';}
+    history.unshift({q:q,a:a});renderHist();
+  }catch(e){
+    el.innerHTML='<span class="err">Error: '+e.message+'</span>';el.className='resp-cnt';
+  }
   document.getElementById('gbtn').disabled=false;
 }
 
 function renderHist(){
-  document.getElementById('hist').innerHTML=qaHistory.slice(1,6).map(function(i){
-    return '<div class="hist-item"><div class="hist-q">Q: '+i.q+'</div><div>'+i.a+'</div></div>';
+  document.getElementById('hist').innerHTML=history.slice(1,5).map(function(i){
+    return '<div class="hist-item"><div class="hist-q">'+i.q+'</div><div>'+i.a+'</div></div>';
   }).join('');
 }
 
@@ -267,3 +336,4 @@ buildTopics();
 </script>
 </body>
 </html>
+
